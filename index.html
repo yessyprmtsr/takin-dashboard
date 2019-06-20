@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Takin Event Input</title>
+  <link rel="stylesheet" type="text/css" href="assets/vendor/semantic/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-storage.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+</head>
+<body>
+  <main id="app" class="main">
+    <section class="board">
+      <h3>Dashboard TakIn</h3>
+      <div class="ui section divider"></div>
+      <p>Total user: {{ totalUser }}</p>
+      <p>Total event: {{ totalEvent }}</p>
+    </section>
+    <div v-if="notifSuccess" @click="dismissNotif" class="ui form success">
+      <div class="ui success message">
+        <div class="header">Successful</div>
+        <p>the operation was carried out successfully</p>
+      </div>
+    </div>
+    <section class="board">
+      <h4 class="ui dividing header">Input Event Baru</h4>
+      <form class="ui form">
+        <div class="field">
+          <label>Title</label>
+          <input v-model="newEvent.title" type="text" name="title" placeholder="Judul event">
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea rows="2" v-model="newEvent.description" name="description" placeholder="Deskripsi event"></textarea>
+        </div>
+        <div class="field">
+          <label>Publisher</label>
+          <input v-model="newEvent.publisher" type="text" name="publisher" placeholder="Publisher event">
+        </div>
+        <div class="fields">
+          <div class="eight wide field">
+            <label>Tanggal</label>
+            <input type="date" v-model="newEvent.date" name="date" placeholder="Tanggal">
+          </div>
+          <div class="four wide field">
+              <label>Waktu Mulai</label>
+            <input type="text" class="timepicker" v-model="newEvent.time_start" name="time_start" placeholder="Waktu Mulai">
+          </div>
+          <div class="four wide field">
+            <label>Waktu Berakhir</label>
+            <input type="text" class="timepicker" v-model="newEvent.time_end" name="time_end" placeholder="Waktu Mulai">
+          </div>
+        </div>
+        <div class="field">
+          <label>Lokasi</label>
+          <input @change="searchPlace" v-if="!newEvent.location_name" type="text" placeholder="Cari lokasi (Tekan enter)">
+          <div v-if="newEvent.location_name" class="fields">
+            <div class="eight wide field">
+              <input type="text" v-model="newEvent.location_name" readonly>
+            </div>
+            <button @click="unsetLocation" class="ui labeled icon red button" type="button">
+              <i class="trash icon"></i>
+              Delete
+            </button>
+          </div>
+          <div v-if="!newEvent.location_name" class="searching-location">
+            <p v-if="isLocationLoading">
+                <i class="spinner loading icon"></i>Please wait...
+            </p>
+            <div v-if="!isLocationLoading" class="ui list">
+              <div class="item" v-for="(item, index) in locationResult" key="index">
+                <i class="map marker icon"></i>
+                <div class="content">
+                  <a @click="setLocation(item)" class="header">{{ item.name }}</a>
+                  <div class="description">{{ item.formatted_address }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Tipe Event</label>
+          <select v-model="newEvent.type" class="ui search dropdown">
+            <option value="">Pilih Tipe Event</option>
+            <option value="seminar">Seminar</option>
+            <option value="committee">Committee</option>
+            <option value="contest">Contest</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>TAK Point</label>
+          <input v-model="newEvent.point" type="number" name="point" placeholder="Point">
+        </div>
+        <div class="field">
+          <label>Harga</label>
+          <input v-model="newEvent.price" type="number" name="price" placeholder="Harga Event">
+        </div>
+        <div class="field">
+          <label>Ticket Total</label>
+          <input v-model="newEvent.ticket_total" type="number" name="ticket_total" placeholder="Jumlah tiket yang di jual">
+        </div>
+        <div class="field">
+          <label>Photo URL / Upload Foto</label>
+          <div class="ui buttons image-choice">
+            <button @click="imageChoice(true)" type="button" class="ui button">Photo from URL</button>
+            <div class="or"></div>
+            <button @click="imageChoice(false)" type="button" class="ui positive button">Upload Photo</button>
+          </div>
+          <input v-if="isUsingImageURL" v-model="newEvent.photo_url" type="text" name="photo_url" placeholder="Input URL Foto">
+          <input v-if="!isUsingImageURL" type="file" @change="fileChange" name="photo_url" placeholder="Input URL Foto">
+        </div>
+        <button v-if="!isSubmitLoading" class="ui primary button" @click="submitEvent" type="button">Submit</button>
+        <button v-if="isSubmitLoading" class="ui primary loading button" type="button">Loading</button>
+      </form>
+    </section>
+  </main>
+
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+  <script src="assets/vendor/semantic/semantic.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+  <script src="assets/js/takin.js"></script>
+  <script>
+    $('.dropdown').dropdown();
+    $('.timepicker').timepicker({
+      timeFormat: 'HH:mm',
+      interval: 60,
+      minTime: '00',
+      maxTime: '23:00',
+      defaultTime: '17',
+      startTime: '00:00',
+      dynamic: false,
+      dropdown: true,
+      scrollbar: true
+    });
+  </script>
+</body>
+</html>
