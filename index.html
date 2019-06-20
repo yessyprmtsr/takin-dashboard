@@ -147,6 +147,29 @@
     </section>
     <section id="eventList" v-if="sectionActive==='eventList'" class="board">
       <h4 class="ui dividing header">Events List</h4>
+      <div v-if="isLoadingEventList" class="ui active centered medium inline loader"></div>
+      <table v-if="!isLoadingEventList" class="ui selectable celled table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Event Title</th>
+            <th>Publisher</th>
+            <th>Location</th>
+            <th>Ticket Sold</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="data-row" v-for="(item, index) in allEvent">
+            <td>{{ index }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.publisher }}</td>
+            <td>{{ item.location_name }}</td>
+            <td>{{ item.ticket_sold }}/{{ item.ticket_total }}</td>
+            <td><button class="ui icon red button"><i class="trash icon"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   </main>
 

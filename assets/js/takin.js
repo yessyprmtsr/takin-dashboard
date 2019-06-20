@@ -46,6 +46,9 @@ new Vue({
         ticket_sold: '0',
         photo_url: '',
       },
+      //eventListData
+      isLoadingEventList: true,
+      allEvent: [],
     }
   },
   computed: {},
@@ -68,6 +71,10 @@ new Vue({
     changeMenu(menu) {
       window.scroll(0, 0);
       this.sectionActive = menu;
+
+      if(menu === 'eventList') {
+        this.getAllEventData();
+      }
     },
 
     imageChoice(param) {
@@ -186,6 +193,20 @@ new Vue({
       this.notifSuccess = true;
       this.isSubmitLoading = false;
       this.locationResult = [];
+    },
+
+    getAllEventData() {
+      this.isLoadingEventList = true;
+      this.allEvent = [];
+      const self = this;
+      db.collection("event").get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+              self.allEvent.push(doc.data());
+          });
+          self.isLoadingEventList = false;
+      }).catch(function(error) {
+          console.log("Error getting documents: ", error);
+      });
     },
   }
 });
