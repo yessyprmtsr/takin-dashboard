@@ -22,6 +22,7 @@ new Vue({
       totalEvent: 0,
       totalUser: 0,
       notifSuccess: false,
+      sectionActive: '',
       isUsingImageURL: true,
       selectedFile: '',
       isSubmitLoading: false,
@@ -62,6 +63,11 @@ new Vue({
 
     dismissNotif() {
       this.notifSuccess = false;
+    },
+
+    changeMenu(menu) {
+      window.scroll(0, 0);
+      this.sectionActive = menu;
     },
 
     imageChoice(param) {

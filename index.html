@@ -43,6 +43,9 @@
           </div>
         </div>
       </div>
+      <h4 class="ui dividing header">Dashboard menu</h4>
+      <button @click="changeMenu('inputNewEvent')" class="ui labeled icon primary button"><i class="plus icon"></i>Input New Event</button>
+      <button @click="changeMenu('eventList')" class="ui labeled icon primary button"><i class="list icon"></i>Event List</button>
     </section>
     <div v-if="notifSuccess" @click="dismissNotif" class="ui form success">
       <div class="ui success message">
@@ -50,7 +53,7 @@
         <p>the operation was carried out successfully</p>
       </div>
     </div>
-    <section class="board">
+    <section id="inputNewEvent" v-if="sectionActive==='inputNewEvent'" class="board">
       <h4 class="ui dividing header">Input Event Baru</h4>
       <form class="ui form">
         <div class="field">
@@ -81,7 +84,7 @@
         </div>
         <div class="field">
           <label>Lokasi</label>
-          <input @change="searchPlace" v-if="!newEvent.location_name" type="text" placeholder="Cari lokasi (Tekan enter)">
+          <input @change="searchPlace" v-if="!newEvent.location_name" type="text" placeholder="Cari lokasi (Tekan enter, lalu klik text biru dibawah)">
           <div v-if="newEvent.location_name" class="fields">
             <div class="eight wide field">
               <input type="text" v-model="newEvent.location_name" readonly>
@@ -132,14 +135,18 @@
           <div class="ui buttons image-choice">
             <button @click="imageChoice(true)" type="button" class="ui button">Photo from URL</button>
             <div class="or"></div>
-            <button @click="imageChoice(false)" type="button" class="ui positive button">Upload Photo</button>
+            <button @click="imageChoice(false)" type="button" class="ui primary button">Upload Photo</button>
           </div>
+          <hr class="invisible">
           <input v-if="isUsingImageURL" v-model="newEvent.photo_url" type="text" name="photo_url" placeholder="Input URL Foto">
           <input v-if="!isUsingImageURL" type="file" @change="fileChange" name="photo_url" placeholder="Input URL Foto">
         </div>
-        <button v-if="!isSubmitLoading" class="ui primary button" @click="submitEvent" type="button">Submit</button>
+        <button v-if="!isSubmitLoading" class="ui labeled icon primary button" @click="submitEvent" type="button"><i class="save icon"></i>Submit</button>
         <button v-if="isSubmitLoading" class="ui primary loading button" type="button">Loading</button>
       </form>
+    </section>
+    <section id="eventList" v-if="sectionActive==='eventList'" class="board">
+      <h4 class="ui dividing header">Events List</h4>
     </section>
   </main>
 
