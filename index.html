@@ -19,8 +19,30 @@
     <section class="board">
       <h3>Dashboard TakIn</h3>
       <div class="ui section divider"></div>
-      <p>Total user: {{ totalUser }}</p>
-      <p>Total event: {{ totalEvent }}</p>
+      <br>
+      <div class="ui cards">
+        <div class="card">
+          <div class="content">
+            <i class="user icon"></i>
+            <div class="count">{{ totalUser }}</div>
+            <div class="text">&nbsp;Users</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="content">
+            <i class="calendar alternate icon"></i>
+            <div class="count">{{ totalEvent }}</div>
+            <div class="text">&nbsp;Events</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="content">
+            <i class="ticket alternate icon"></i>
+            <div class="count">0</div>
+            <div class="text">&nbsp;Ticket Sold</div>
+          </div>
+        </div>
+      </div>
     </section>
     <div v-if="notifSuccess" @click="dismissNotif" class="ui form success">
       <div class="ui success message">

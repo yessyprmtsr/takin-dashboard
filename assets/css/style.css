@@ -15,6 +15,25 @@ body {
   margin: 18px 0;
 }
 
+/* dashboard card */
+.card .content {
+  text-align: center;
+}
+.card .content i {
+  margin-top: 22px;
+  font-size: 42px;
+  color: #cacaca;
+}
+.card .content .count {
+  display: inline-block;
+  margin-left: 16px;
+  font-size: 42px;
+}
+.card .content .text {
+  display: inline-block;
+  font-size: 24px;
+}
+
 .ui.section.divider {
   margin-top: 0;
   margin-bottom: 0;
