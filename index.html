@@ -166,7 +166,7 @@
             <td>{{ item.publisher }}</td>
             <td>{{ item.location_name }}</td>
             <td>{{ item.ticket_sold }}/{{ item.ticket_total }}</td>
-            <td><button class="ui icon red button"><i class="trash icon"></i></button></td>
+            <td><button @click="deleteData(item.docId)" class="ui icon red button"><i class="trash icon"></i></button></td>
           </tr>
         </tbody>
       </table>

@@ -201,12 +201,33 @@ new Vue({
       const self = this;
       db.collection("event").get().then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-              self.allEvent.push(doc.data());
+            const eventItem = {
+              docId: doc.id,
+              title: doc.data().title,
+              publisher: doc.data().publisher,
+              location_name: doc.data().location_name,
+              ticket_sold: doc.data().ticket_sold,
+              ticket_total: doc.data().ticket_total,
+            };
+            self.allEvent.push(eventItem);
           });
           self.isLoadingEventList = false;
       }).catch(function(error) {
           console.log("Error getting documents: ", error);
       });
+    },
+
+    deleteData(docId) {
+      const self = this;
+
+      db.collection("event").doc(docId).delete().then(function() {
+        self.getEventCount();
+        self.getAllEventData();
+        window.scroll(0, 0);
+        self.notifSuccess = true;
+      }).catch(function(error) {
+        console.error("Error removing document: ", error);
+      });    
     },
   }
 });
