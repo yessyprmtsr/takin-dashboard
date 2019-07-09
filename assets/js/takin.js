@@ -15,6 +15,10 @@ const storageRef = storageService.ref();
 //firebase db
 const db = firebase.firestore();
 
+//use vuelidate
+Vue.use(window.vuelidate.default)
+const { required } = window.validators
+
 new Vue({
   el: '#app',
   data() {
@@ -51,7 +55,25 @@ new Vue({
       allEvent: [],
     }
   },
-  computed: {},
+  validations: {
+    newEvent: {
+      title: {
+        required,
+      },
+      description: {
+        required,
+      },
+      publisher: {
+        required,
+      },
+      location_name: {
+        required,
+      },
+      type: {
+        required,
+      },
+    }
+  },
   mounted() {
     this.getUserCount();
     this.getEventCount();
@@ -101,8 +123,8 @@ new Vue({
     setLocation(loc) {
       this.newEvent.location_name = loc.name;
       this.newEvent.location_address = loc.formatted_address;
-      this.newEvent.location_lat = loc.geometry.location.lat;
-      this.newEvent.location_long = loc.geometry.location.lng;
+      this.newEvent.location_lat = String(loc.geometry.location.lat);
+      this.newEvent.location_long = String(loc.geometry.location.lng);
     },
 
     unsetLocation() {
@@ -117,6 +139,8 @@ new Vue({
     },
 
     submitEvent() {
+      if (this.$v.$invalid) { return; } //if form is not valid, then do nothing
+
       this.isSubmitLoading = true;
       const self = this;
 

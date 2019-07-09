@@ -55,3 +55,8 @@ body {
 .searching-location {
   margin-top: 8px;
 }
+
+.validation-error {
+  color: #e0b4b4;
+  margin-top: 8px;
+}
