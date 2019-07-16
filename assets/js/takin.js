@@ -228,6 +228,7 @@ new Vue({
             const eventItem = {
               docId: doc.id,
               title: doc.data().title,
+              type: doc.data().type,
               publisher: doc.data().publisher,
               location_name: doc.data().location_name,
               ticket_sold: doc.data().ticket_sold,
@@ -243,7 +244,7 @@ new Vue({
 
     deleteData(docId) {
       const self = this;
-
+      
       db.collection("event").doc(docId).delete().then(function() {
         self.getEventCount();
         self.getAllEventData();

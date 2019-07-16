@@ -60,3 +60,7 @@ body {
   color: #e0b4b4;
   margin-top: 8px;
 }
+
+.eventType {
+  text-transform: capitalize;
+}

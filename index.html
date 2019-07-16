@@ -165,6 +165,7 @@
           <tr>
             <th>No</th>
             <th>Event Title</th>
+            <th>Type</th>
             <th>Publisher</th>
             <th>Location</th>
             <th>Ticket Sold</th>
@@ -175,6 +176,7 @@
           <tr class="data-row" v-for="(item, index) in allEvent">
             <td>{{ index }}</td>
             <td>{{ item.title }}</td>
+            <td class="eventType">{{ item.type }}</td>
             <td>{{ item.publisher }}</td>
             <td>{{ item.location_name }}</td>
             <td>{{ item.ticket_sold }}/{{ item.ticket_total }}</td>
